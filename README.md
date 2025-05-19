@@ -1,93 +1,117 @@
-# OS Ticket Helpdesk Support System Deployment on Docker Container
+# OS Ticket Helpdesk Support System on Docker
 
+![OS Ticket](images/image-5.png)
 
+## Overview
 
-# Description:
-is an open source for support ticketing system used by employee to submit their technical issues related to daily business operations.
+OS Ticket is an open-source helpdesk support platform that streamlines the submission and management of technical support requests. This guide demonstrates how to deploy OS Ticket using Docker containers for quick and easy setup.
 
-## 1. Download and install Docker Desktop:
-  
-   1) Docker Desktop for Windows_x86_64
-      https://docs.docker.com/desktop/setup/install/windows-install/
-   2) Verify if docker installed successfully using the following command:
-    $ docker --version
+## Prerequisites
 
-![alt text](image.png)
+- Windows x86_64 system
+- Internet connection for downloading required components
 
-  3) Microsft VS Code: 
-     https://code.visualstudio.com/download
-  4) Adding Markdown extension for README.md file writing:
-   ![alt text](image-8.png)
+## Installation Guide
 
+### 1. Setup Docker Desktop
 
-## 2. Pull the OS Ticket app docker image from the hub.docker.com
-$ docker pull osticket/osticket:latest 
+1. Download and install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+2. Verify installation by running:
+   ```bash
+   docker --version
+   ```
+   ![Docker Version](images/image.png)
 
-![alt text](image-1.png)
+3. Install [VS Code](https://code.visualstudio.com/download) (optional for editing)
+4. Add Markdown extension in VS Code for README editing (optional)
+   ![VS Code Markdown Extension](images/image-8.png)
 
+### 2. Pull Docker Images
 
-## 3. Pull MairaDB database docker image to be used in back-end
-$ docker pull mariadb: latest
+1. Pull the OS Ticket application image:
+   ```bash
+   docker pull osticket/osticket:latest
+   ```
+   ![OS Ticket Image Pull](images/image-1.png)
 
-![alt text](image-2.png)
+2. Pull MariaDB database image for the backend:
+   ```bash
+   docker pull mariadb:latest
+   ```
+   ![MariaDB Image Pull](images/image-2.png)
 
-## 4. Use docker command to create user, new database with credentials (username and password) in the installed MySQL database:
+### 3. Configure and Run Containers
 
-$ docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret \
--e MYSQL_USER=osticket -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=osticket mariadb:latest
+1. Create and configure the MariaDB container:
+   ```bash
+   docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=osticket -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=osticket mariadb:latest
+   ```
+   ![MariaDB Container Setup](images/image-3.png)
 
-**Copy the below command** \
-docker run --name osticket_mysql -d -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_USER=osticket -e MYSQL_PASSWORD=secret -e MYSQL_DATABASE=osticket mariadb:latest 
+2. Deploy the OS Ticket application container linked to the database:
+   ```bash
+   docker run --name osticket -d --link osticket_mysql:mysql -p 8080:80 campbellsoftwaresolutions/osticket
+   ```
+   ![OS Ticket Container Setup](images/image-4.png)
 
-### Should look like the below code on your command line/terminal:
+## Accessing OS Ticket
 
-![alt text](image-3.png)
+The OS Ticket portal should now be accessible at http://localhost:8080
 
-## 5. Now, run both images to generate docker containers:
+### End-User Portal
 
-$ docker run --name osticket -d --link osticket_mysql:mysql -p 8080:80 campbellsoftwaresolutions/osticket
+![End-User Portal](images/image-6.png)
 
-![alt text](image-4.png)
+As an end-user, you can:
+1. Open a new support ticket
+2. Sign in to your existing account
+3. Create a new account
 
-## 6. Now, the OS Ticket portal (End-User) should be ready for access localy at http:localhost:8080
+### Administrator Portal
 
-![alt text](image-5.png)
+![Admin Portal](images/image-7.png)
 
-## 7. Perform the following testing tasks following below instructions:
+Default admin credentials:
+- Username: `ostadmin`
+- Password: `Admin1`
 
-1)	Type: localhost:8080 to access the regular user or end-user portal
-2)	Click to “Open a New Ticket” to create a new ticket
-3)	Click on “Sign In” to your Help Desk Support OR Signup OR && Login page
+## Testing Tasks
 
-![alt text](image-6.png)
+### End-User Portal Testing
+1. Navigate to http://localhost:8080
+2. Try creating a new ticket
+3. Create a new user account or sign in with existing credentials
 
-## 8. Using the above portal, perform the following testing tasks:
-1)	Click on Create an account link to sign up
-2)	Provide your credentials if already a member
-3)	Click Sign in here if you are an admin or an agent  go to administrator portal.
+### Admin Portal Testing
+1. Sign in to the admin portal using the default credentials
+2. Explore ticket management features
+3. Configure system settings and user permissions
 
+## Version Control
 
-## 9. Login to your adminstrator portal/account
-![alt text](image-7.png)
+Push your project to GitHub:
+```
+bash git push git@github.com:macueit3/osticket-system-helpdesk.git
 
+```
+## Security Notes
 
-## 10. Push your project to github
-- Pushing local git repository to specific remote repository on github.com
-  
-   $ git push [remote_ssh_repo_path]
+- Change default admin credentials immediately after first login
+- Consider using environment variables or Docker secrets for sensitive information in production
 
-   $ git push git@github.com:macdit3/osticket-system-helpdesk.git
+## References
 
+- [Docker Desktop Installation Guide](https://docs.docker.com/desktop/setup/install/windows-install/)
+- [OS Ticket Docker Deployment Guide](https://mpolinowski.github.io/docs/DevOps/Provisioning/2022-10-16--os-ticket-docker/2022-10-16/)
 
-  ## References:
-- Dowloand and install Docker Deskotp: https://docs.docker.com/desktop/setup/install/windows-install/
+## Author
 
-- Provisioning OS Ticket on Docker Container: https://mpolinowski.github.io/docs/DevOps/Provisioning/2022-10-16--os-ticket-docker/2022-10-16/
+**Macuei Mathiang Ring**
+- MS in Information Technology (2019)
+- BA in Computer Science (2013)
+- Project completed as part of the ULEM MA workforce IT development program 2025
+- [LinkedIn Profile](https://www.linkedin.com/in/macuei/)
 
+## License
 
-## Authors and Acknowledgement:
-- Macuei Mathiang, MS in Information Technology and BA in Computer Science 2013
-- This project was completed as part of MA workforce IT development program 2025
-- To learn more about the author, please visit his linkedin acocunt: https://www.linkedin.com/in/macuei/
-  
-
+This project uses OS Ticket which is distributed under the GPL v2 license.
